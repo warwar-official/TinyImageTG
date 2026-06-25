@@ -1,4 +1,5 @@
 import asyncio
+import copy
 import json
 import logging
 import os
@@ -59,7 +60,7 @@ async def pipeline_worker(queue: asyncio.Queue, callback: callable):
             else:
                 prompt = prompt.replace("[NO ENCHANCE]", "")
             # Image generation
-            workflow = insert_prompt(workflows.get("Text-to-Img", {}), prompt, prompts.get("image_negative_prompt", ""))
+            workflow = insert_prompt(copy.deepcopy(workflows.get("Text-to-Img", {})), prompt, prompts.get("image_negative_prompt", ""))
             if image_path:
                 workflow = insert_image(workflow, image_path)
             result = await comfyui_send_prompt(workflow)
